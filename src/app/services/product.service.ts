@@ -4,24 +4,24 @@ import { map, Observable } from 'rxjs';
 import { Product } from '../common/product';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductService {
-
   private baseUrl = 'http://localhost:8080/api/products';
-  
-  constructor(private httpClient: HttpClient) { }
 
-  getProductList(): Observable<Product[]> {
-    return this.httpClient.get<GetReponse>(this.baseUrl).pipe(
-      map(response => response._embedded.products)
-    );
+  constructor(private httpClient: HttpClient) {}
+
+  getProductList(theCategoryId: number): Observable<Product[]> {
+    const url = `${this.baseUrl}/search/findByCategoryId?id=${theCategoryId}`;
+
+    return this.httpClient
+      .get<GetReponse>(url)
+      .pipe(map((response) => response._embedded.products));
   }
-
 }
 
 interface GetReponse {
   _embedded: {
     products: Product[];
-  }
+  };
 }
